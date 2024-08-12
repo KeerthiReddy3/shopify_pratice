@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (collectionsWithLimits.length > 0) {
       const collectionNamesList = collectionsWithLimits.map(id => collectionNames[id]).join(', ');
-      collectionLimitWarning.textContent = `You cannot purchase more than 2 different products from ${collectionNamesList}.`;
+      collectionLimitWarning.textContent = `You can't purchase more than 2 different products from ${collectionNamesList}.`;
       collectionLimitWarning.style.display = 'block';
       // Disable the checkout button
       if (checkoutButton) {
