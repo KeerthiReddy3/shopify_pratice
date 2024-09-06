@@ -17,27 +17,27 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/send-email', (req, res) => {
-  const { email } = req.body;
-
+    const { email } = req.body;
   
-  const mailOptions = {
-    from: 'keerthimanoharreddy@gmail.com',  
-    to: email,                     
-    subject: 'Thank You for Subscribing!',
-    text: 'Thank you for subscribing to our newsletter!',
-    html: '<strong>Thank you for subscribing to our newsletter!</strong>',
-  };
-
+    const mailOptions = {
+      from: 'keerthimanoharreddy@gmail.com',
+      to: email,
+      subject: 'Thank You for Subscribing!',
+      text: 'Thank you for subscribing to our newsletter!',
+      html: '<strong>Thank you for subscribing to our newsletter!</strong>',
+    };
   
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      return res.status(500).json({ success: false, message: 'Failed to send email.' });
-    }
-    res.json({ success: true, message: 'Email sent successfully!' });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: 'Failed to send email.' });
+      }
+  
+      // Send a success response to the client
+      res.json({ success: true, message: 'Email sent successfully!' });
+    });
   });
-});
-
+  
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
