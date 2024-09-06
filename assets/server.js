@@ -1,42 +1,43 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const nodemailer = require('nodemailer');
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use(bodyParser.json());
 
-// Configure nodemailer
+
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  service: 'gmail', 
   auth: {
-    user: 'keerthimanoharreddy@gmail.com',
-    pass: 'vrqx fucs vqyu hovm',
+    user: 'keerthimanoharreddy@gmail.com', 
+    pass: 'suyx oopz fowo pfec',  
   },
 });
 
-app.post('/subscribe', (req, res) => {
-  // Extract the user's email from the request body
-  const userEmail = req.body['contact[email]'];
+app.post('/send-email', (req, res) => {
+  const { email } = req.body;
 
-  // Set up email options
+  
   const mailOptions = {
-    from: 'keerthimanoharreddy@gmail.com',
-    to: userEmail,
-    subject: 'Subscription Confirmation',
-    text: 'You have been subscribed successfully!',
+    from: 'keerthimanoharreddy@gmail.com',  
+    to: email,                     
+    subject: 'Thank You for Subscribing!',
+    text: 'Thank you for subscribing to our newsletter!',
+    html: '<strong>Thank you for subscribing to our newsletter!</strong>',
   };
 
-  // Send the email
+  
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.error('Error sending email:', error);
-      return res.status(500).send('Error sending email');
+      console.error(error);
+      return res.status(500).json({ success: false, message: 'Failed to send email.' });
     }
-    console.log('Email sent:', info.response);
-    res.status(200).send('Subscription successful');
+    res.json({ success: true, message: 'Email sent successfully!' });
   });
 });
 
 app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
+  console.log('Server is running on port 3000');
 });
