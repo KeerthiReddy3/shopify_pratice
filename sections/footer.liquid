@@ -170,7 +170,7 @@
               {%- if section.settings.newsletter_heading != blank -%}
                 <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
               {%- endif -%}
-              {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+              {%- form 'custom', id: 'ContactFooter', class: 'footer__newsletter newsletter-form', action: 'http://localhost:3000/subscribe', method: 'post' -%}
                 <input type="hidden" name="contact[tags]" value="newsletter">
                 <div class="newsletter-form__field-wrapper">
                   <div class="field">
@@ -562,3 +562,47 @@
   }
 }
 {% endschema %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+  const subscriptionForm = document.getElementById('ContactFooter'); 
+
+  if (subscriptionForm) {
+    subscriptionForm.addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const emailInput = document.querySelector('[name="contact[email]"]'); 
+      const email = emailInput.value;
+
+      // Simple email validation
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      // Send email to the locally running server
+      fetch('http://localhost:3000/send-email', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert('Thank you for subscribing!');
+            emailInput.value = ''; // Clear the input field
+          } else {
+            alert('There was an error. Please try again later.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('There was an error. Please try again later.');
+        });
+    });
+  }
+});
+</script>
